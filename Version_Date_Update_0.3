@@ -63,7 +63,8 @@ function main(){
             '#update_panel { position: fixed; top: 30vh; left: 20px; z-index: 100; '+
             'padding: 20px; border: 1px solid #aaa; background: #fff; '+
             'font: normal 16px/22px Meiryo; } '+
-            '.ver_num { width: 68px; padding: 2px 2px 0 0; text-align: center; } '+
+            '.ver_num { width: 68px; padding: 3px 2px 1px 0; text-align: center; '+
+            'border: 1px solid #666; border-radius: 3px; } '+
             'input[type=number].ver_num::-webkit-inner-spin-button { '+
             'height: 20px; margin-top: 2px; } '+
             '.up_date { padding: 2px 6px 0; margin: 0 20px; } '+
