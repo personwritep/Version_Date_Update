@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Version Date Update ⭐
 // @namespace        http://tampermonkey.net/
-// @version        0.2
+// @version        0.3
 // @description        記事中の「バージョン」「更新日付」を記入するツール　「Alt＋F9」
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventry*
@@ -125,6 +125,7 @@ function main(){
 
                 let up_date=document.querySelector('#update_panel .up_date');
                 if(up_date){
+                    up_date.focus(); //「Date Set」ボタンにフォーカスを置く
                     let datedisp=iframe_doc.querySelector('.update_date'); // 更新対象日付のクラス名
                     if(datedisp){
                         up_date.onclick=()=>{
