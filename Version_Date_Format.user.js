@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Version Date Format ⭐
 // @namespace        http://tampermonkey.net/
-// @version        0.1
-// @description        マニュアルの「バージョン」「更新日付」の書式変換ツール
+// @version        0.2
+// @description        マニュアルの「バージョン」「更新日付」の定型書式化　起動:「日付表示」をClick
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventry*
 // @exclude        https://blog.ameba.jp/ucs/entry/srventrylist.do*
@@ -42,22 +42,29 @@ function main(){
             let iframe_doc=editor_iframe.contentWindow.document;
             if(iframe_doc){
 
-                iframe_doc.onclick=function(event){
+                iframe_doc.onclick=function(event){ // 編集画面の「バージョン・日付表示」をクリツク
                     let elem=iframe_doc.elementFromPoint(event.clientX, event.clientY);
                     if(elem){
-                        if(elem.tagName=="P"){
-                            origin=elem.outerHTML; // 変換前のデータ
+                        let target_elem=elem.closest('p');
+                        if(target_elem){
+
+                            origin=target_elem.outerHTML; // 変換前のデータ
                             let last_ver='';
                             let last_update='';
 
-                            let ver_index=elem.textContent.indexOf('ver.');
-                            let ver_disp=elem.textContent.substr(ver_index, 10);
-                            if(ver_disp){
-                                last_ver=parseFloat(ver_disp.replace('ver.', '')).toFixed(1); }
+                            let ver_index=target_elem.textContent.indexOf('ver.');
+                            if(ver_index!=-1){ //「ver.」表示あり
+                                let ver_disp=
+                                    target_elem.textContent.substring(ver_index, ver_index+9); // ver.***** まで
+                                if(ver_disp){
+                                    last_ver=parseFloat(ver_disp.replace('ver.', '')).toFixed(1); }} // 小数点第1位
+                            else{
+                                last_ver=-1; } //「ver.」表示なし
 
-                            let year_disp=elem.textContent.match(/\b\d{4}\b/g);
-                            let date_index=elem.textContent.indexOf(year_disp);
-                            let date_disp=elem.textContent.substr(date_index, 10);
+                            let year_disp=target_elem.textContent.match(/\b\d{4}\b/g);
+                            let date_index=target_elem.textContent.indexOf(year_disp);
+                            let date_disp=
+                                target_elem.textContent.substring(date_index, date_index+10); // 10文字までの範囲
                             if(date_disp){
                                 if(date_disp.includes('年')){ // 年月日表示
                                     let year=date_disp.split('年')[0];
@@ -72,7 +79,7 @@ function main(){
                                     last_update=year +'.'+ month.padStart(2, '0') +'.'+ day.padStart(2, '0'); }
 
                                 if(last_ver!='' && last_update!=''){ // 変換ツールの起動条件
-                                    disp_panel(elem, last_ver, last_update); }
+                                    disp_panel(target_elem, last_ver, last_update); }
 
                             }}}
 
@@ -82,7 +89,7 @@ function main(){
 
 
 
-    function disp_panel(elem, last_ver, last_update){
+    function disp_panel(target_elem, last_ver, last_update){
         let panel=
             '<div id="rewrite_panel">'+
             '<input class="renew_text" type="text">'+
@@ -104,19 +111,28 @@ function main(){
 
         let renew_text=document.querySelector('#rewrite_panel .renew_text');
         if(renew_text){
-            renew_text.value='ver.'+ last_ver +' 以降に対応　'+ last_update +' 更新'; }
+            if(last_ver!=-1){ //「ver.」表示あり
+                renew_text.value='ver.'+ last_ver +' 以降に対応　'+ last_update +' 更新'; }
+            else{ //「ver.」表示なし
+                renew_text.value=last_update +' 更新'; }}
 
 
 
         let rewrite=document.querySelector('#rewrite_panel .rewrite');
         if(rewrite){
             rewrite.onclick=()=>{
-                let new_data=
-                    '<p style="text-align: right; padding: .5em 1.5em 0;">'+
-                    '<span class="update_ver">ver.'+ last_ver +'</span> 以降に対応　'+
-                    '<span class="update_date">'+ last_update +'</span> 更新</p>';
+                let new_data='';
+                if(last_ver!=-1){ //「ver.」表示あり
+                    new_data+=
+                        '<p style="text-align: right; padding: .5em 1.5em 0;">'+
+                        '<span class="update_ver">ver.'+ last_ver +'</span> 以降に対応　'+
+                        '<span class="update_date">'+ last_update +'</span> 更新</p>'; }
+                else{ //「ver.」表示なし
+                    new_data+=
+                        '<p style="text-align: right; padding: .5em 1.5em 0;">'+
+                        '<span class="update_date">'+ last_update +'</span> 更新</p>'; }
 
-                elem.outerHTML=new_data; }}
+                target_elem.outerHTML=new_data; }}
 
 
         let reset=document.querySelector('#rewrite_panel .reset');
