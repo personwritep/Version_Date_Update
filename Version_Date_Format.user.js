@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name        Version Date Format ⭐
 // @namespace        http://tampermonkey.net/
-// @version        0.2
+// @version        0.3
 // @description        マニュアルの「バージョン」「更新日付」の定型書式化　起動:「日付表示」をClick
 // @author        Ameba Blog User
-// @match        https://blog.ameba.jp/ucs/entry/srventry*
-// @exclude        https://blog.ameba.jp/ucs/entry/srventrylist.do*
+// @match        https://blog.ameba.jp/ucs/entry/srventryinsertinput.do*
+// @match        https://blog.ameba.jp/ucs/entry/srventryupdateinput.do*
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=ameblo.jp
 // @grant        none
 // @updateURL        https://github.com/personwritep/Version_Date_Update/raw/main/Version_Date_Format.user.js
