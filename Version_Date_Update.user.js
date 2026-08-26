@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name        Version Date Update ⭐
 // @namespace        http://tampermonkey.net/
-// @version        0.3
+// @version        0.4
 // @description        記事中の「バージョン」「更新日付」を記入するツール　「Alt＋F9」
 // @author        Ameba Blog User
-// @match        https://blog.ameba.jp/ucs/entry/srventry*
-// @exclude        https://blog.ameba.jp/ucs/entry/srventrylist.do*
+// @match        https://blog.ameba.jp/ucs/entry/srventryinsertinput.do*
+// @match        https://blog.ameba.jp/ucs/entry/srventryupdateinput.do*
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=ameblo.jp
 // @grant        none
 // @updateURL        https://github.com/personwritep/Version_Date_Update/raw/main/Version_Date_Update.user.js
