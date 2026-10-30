@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Version Date Update ⭐
 // @namespace        http://tampermonkey.net/
-// @version        0.4
+// @version        0.5
 // @description        記事中の「バージョン」「更新日付」を記入するツール　「Alt＋F9」
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventryinsertinput.do*
@@ -28,6 +28,12 @@ function wait_target(){
 
 
 function main(){
+    let handler=false;
+    if(!handler){
+        document.addEventListener("keydown", check_key);
+        handler=true; }
+
+
     let target=document.getElementById('cke_1_contents'); // 監視 target
     let monitor=new MutationObserver(catch_key);
     monitor.observe(target, {childList: true}); // ショートカット待受け開始
@@ -35,20 +41,25 @@ function main(){
     catch_key();
 
     function catch_key(){
-        document.addEventListener("keydown", check_key); // iframe外のキー取得
-
         let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
         if(editor_iframe){ // iframe読込みが実行条件
             let iframe_doc=editor_iframe.contentWindow.document;
-            iframe_doc.addEventListener("keydown", check_key); } // iframe内のキー取得
+            if(iframe_doc){
+                let iframe_body=iframe_doc.body;
+                if(iframe_body){
+                    if(!iframe_body.hasAttribute('listener_vdu')){
+                        iframe_body.addEventListener("keydown", check_key);
+                        iframe_body.setAttribute('listener_vdu', 'true'); }}}
 
-        function check_key(event){
-            if(event.keyCode==120 && event.altKey){ // 「Alt+F9」キー入力
-                event.preventDefault();
-                set_mark(); }
-        } // check_key
+        } // if(editor_iframe)
 
-    } // catch_key
+    } // catch_key()
+
+
+    function check_key(event){
+        if(event.altKey && event.keyCode==120){ // 「Alt+F9」キー入力
+            event.preventDefault();
+            set_mark(); }}
 
 
 
