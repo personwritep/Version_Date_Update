@@ -28,11 +28,7 @@ function wait_target(){
 
 
 function main(){
-    let handler=false;
-    if(!handler){
-        document.addEventListener("keydown", check_key);
-        handler=true; }
-
+    document.addEventListener("keydown", check_key);
 
     let target=document.getElementById('cke_1_contents'); // 監視 target
     let monitor=new MutationObserver(catch_key);
