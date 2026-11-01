@@ -13,6 +13,8 @@
 // ==/UserScript==
 
 
+let listen=Symbol();
+
 let retry=0;
 let interval=setInterval(wait_target, 100);
 function wait_target(){
@@ -23,7 +25,6 @@ function wait_target(){
     if(target){
         clearInterval(interval);
         main(); }}
-
 
 
 
@@ -51,9 +52,9 @@ function main(){
         if(editor_iframe){ // iframe読込みが実行条件
             let iframe_doc=editor_iframe.contentWindow.document;
             if(iframe_doc){
-                if(!iframe_doc.listener_vdu){
+                if(!iframe_doc[listen]){
                     iframe_doc.addEventListener('keydown', catch_key);
-                    iframe_doc.listener_vdu='true'; }}
+                    iframe_doc[listen]='true'; }}
         } // if(editor_iframe)
 
 
