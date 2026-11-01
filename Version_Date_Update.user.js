@@ -28,34 +28,46 @@ function wait_target(){
 
 
 function main(){
-    document.addEventListener("keydown", check_key);
+    document.addEventListener('keydown', check_key);
+
+    function check_key(event){
+        if(event.altKey && event.key==='F9'){
+            event.preventDefault();
+            let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
+            if(!editor_iframe){
+                return; }
+            set_mark(); }}
+
+
 
     let target=document.getElementById('cke_1_contents'); // 監視 target
-    let monitor=new MutationObserver(catch_key);
+    let monitor=new MutationObserver(set_catch);
     monitor.observe(target, {childList: true}); // ショートカット待受け開始
 
-    catch_key();
+    set_catch();
 
-    function catch_key(){
+    function set_catch(){
         let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
         if(editor_iframe){ // iframe読込みが実行条件
             let iframe_doc=editor_iframe.contentWindow.document;
             if(iframe_doc){
-                let iframe_body=iframe_doc.body;
-                if(iframe_body){
-                    if(!iframe_body.hasAttribute('listener_vdu')){
-                        iframe_body.addEventListener("keydown", check_key);
-                        iframe_body.setAttribute('listener_vdu', 'true'); }}}
-
+                if(!iframe_doc.listener_vdu){
+                    iframe_doc.addEventListener('keydown', catch_key);
+                    iframe_doc.listener_vdu='true'; }}
         } // if(editor_iframe)
 
-    } // catch_key()
 
+        function catch_key(event){
+            if(event.altKey && event.keyCode==120){ //「Alt+F9」キー入力
+                event.preventDefault();
+                window.parent.document.dispatchEvent(new KeyboardEvent('keydown', {
+                    key: event.key,
+                    altKey: event.altKey,
+                    code: event.code,
+                    bubbles: true
+                })); }}
 
-    function check_key(event){
-        if(event.altKey && event.keyCode==120){ // 「Alt+F9」キー入力
-            event.preventDefault();
-            set_mark(); }}
+    } // set_catch()
 
 
 
