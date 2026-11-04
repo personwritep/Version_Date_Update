@@ -54,7 +54,7 @@ function main(){
             if(iframe_doc){
                 if(!iframe_doc[listen]){
                     iframe_doc.addEventListener('keydown', catch_key);
-                    iframe_doc[listen]='true'; }}
+                    iframe_doc[listen]=true; }}
         } // if(editor_iframe)
 
 
