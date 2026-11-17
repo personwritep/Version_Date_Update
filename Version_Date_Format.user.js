@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Version Date Format ⭐
 // @namespace        http://tampermonkey.net/
-// @version        0.3
+// @version        0.4
 // @description        マニュアルの「バージョン」「更新日付」の定型書式化　起動:「日付表示」をClick
 // @author        Ameba Blog User
 // @match        https://blog.ameba.jp/ucs/entry/srventryinsertinput.do*
@@ -11,6 +11,9 @@
 // @updateURL        https://github.com/personwritep/Version_Date_Update/raw/main/Version_Date_Format.user.js
 // @downloadURL        https://github.com/personwritep/Version_Date_Update/raw/main/Version_Date_Format.user.js
 // ==/UserScript==
+
+
+let listen=Symbol();
 
 
 let retry=0;
@@ -35,14 +38,17 @@ function main(){
 
     get_ver_date();
 
-
     function get_ver_date(){
         let editor_iframe=document.querySelector('.cke_wysiwyg_frame');
         if(editor_iframe){
             let iframe_doc=editor_iframe.contentWindow.document;
             if(iframe_doc){
 
-                iframe_doc.onclick=function(event){ // 編集画面の「バージョン・日付表示」をクリツク
+                if(!iframe_doc[listen]){
+                    iframe_doc.addEventListener('click', set); // 編集画面の「バージョン・日付表示」をクリック
+                    iframe_doc[listen]=true; }
+
+                function set(event){
                     let elem=iframe_doc.elementFromPoint(event.clientX, event.clientY);
                     if(elem){
                         let target_elem=elem.closest('p');
@@ -83,9 +89,11 @@ function main(){
 
                             }}}
 
-                } // iframe_doc.onclick
+                } // set()
 
-            }}}
+            }}
+
+    } // get_ver_date()
 
 
 
